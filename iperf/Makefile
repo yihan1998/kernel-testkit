@@ -8,17 +8,17 @@ INCDIR := include
 CFLAGS += -I$(INCDIR) 
 BUILDDIR := build
 # Source files
-SRCS :=  $(shell find ./$(SRCDIR) -name '*.c' -print)
+SRCS := $(shell find $(SRCDIR) -name '*.c' -print)
 # Object files
-OBJS := $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRCS))
+OBJS := $(patsubst $(SRCDIR)/%.c, $(BUILDDIR)/%.o, $(SRCS))
 # Target executable
-TARGET := $(BUILDDIR)/your_c_program
+TARGET := $(BUILDDIR)/iperf
 
 # Default target
 all: $(TARGET)
 
 # Linking the executable from object files
-$(TARGET): $(OBJS)
+$(TARGET): $(OBJS) | $(BUILDDIR)
 	$(CC) $(CFLAGS) $^ -o $@
 
 # Compiling each source file into object files
@@ -27,7 +27,7 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
 
 # Create build directory if it doesn't exist
 $(BUILDDIR):
-	mkdir -p $(BUILDDIR)
+	@mkdir -p $(BUILDDIR)
 
 # Clean up intermediate files and executable
 clean:
