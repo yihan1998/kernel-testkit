@@ -244,22 +244,25 @@ iperf_set_test_num_streams(struct iperf_test *ipt, int num_streams)
 static void
 check_sender_has_retransmits(struct iperf_test *ipt)
 {
-    if (ipt->sender && ipt->protocol->id == Ptcp)
-	ipt->sender_has_retransmits = 1;
-    else
-	ipt->sender_has_retransmits = 0;
+    if (ipt->sender && ipt->protocol->id == Ptcp) {
+    	ipt->sender_has_retransmits = 1;
+    } else {
+    	ipt->sender_has_retransmits = 0;
+    }
 }
 
 void
 iperf_set_test_role(struct iperf_test *ipt, char role)
 {
     ipt->role = role;
-    if (role == 'c')
-	ipt->sender = 1;
-    else if (role == 's')
-	ipt->sender = 0;
-    if (ipt->reverse)
+    if (role == 'c') {
+    	ipt->sender = 1;
+    } else if (role == 's') {
+    	ipt->sender = 0;
+    }
+    if (ipt->reverse) {
         ipt->sender = ! ipt->sender;
+    }
     check_sender_has_retransmits(ipt);
 }
 
@@ -601,7 +604,6 @@ int iperf_defaults(struct iperf_test *testp)
     init_list_head(&testp->streams);
     init_list_head(&testp->protocols);
 
-#if 0
     tcp = protocol_new();
     if (!tcp) {
         return -1;
@@ -615,8 +617,9 @@ int iperf_defaults(struct iperf_test *testp)
     tcp->send = iperf_tcp_send;
     tcp->recv = iperf_tcp_recv;
     tcp->init = NULL;
-    SLIST_INSERT_HEAD(&testp->protocols, tcp, protocols);
+    list_add_tail(&testp->protocols, tcp, list);
 
+#if 0
     udp = protocol_new();
     if (!udp) {
         protocol_free(tcp);
